@@ -36,7 +36,7 @@ describe("Banking Operations", () => {
       expect(result).toHaveProperty("code", "INVALID_AMOUNT");
       expect(result).toHaveProperty(
         "message",
-        "Account balance cannot be negative"
+        "💸 Account balance cannot be negative"
       );
     });
 
@@ -56,7 +56,7 @@ describe("Banking Operations", () => {
       expect(result).toHaveProperty("code", "INVALID_AMOUNT");
       expect(result).toHaveProperty(
         "message",
-        "Initial account balance must be positive"
+        "💰 Initial account balance must be positive"
       );
     });
   });

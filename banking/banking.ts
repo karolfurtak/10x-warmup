@@ -13,14 +13,14 @@ export function createAccount(account: BankAccount): BankAccount | WithdrawalErr
   if (account.balance < 0) {
     return {
       code: "INVALID_AMOUNT",
-      message: "Account balance cannot be negative"
+      message: "💸 Account balance cannot be negative"
     };
   }
 
   if (account.balance === 0) {
     return {
       code: "INVALID_AMOUNT",
-      message: "Initial account balance must be positive"
+      message: "💰 Initial account balance must be positive"
     };
   }
 
@@ -31,5 +31,50 @@ export function processWithdrawal(
   account: BankAccount,
   withdrawal: WithdrawalRequest
 ): WithdrawalResult | WithdrawalError {
-  // TODO(human): Implement withdrawal processing logic with validation
+  // Validate account ID matches
+  if (withdrawal.accountId !== account.id) {
+    return {
+      code: "ACCOUNT_NOT_FOUND",
+      message: "🔍 Account not found"
+    };
+  }
+
+  // Validate withdrawal amount is positive
+  if (withdrawal.amount <= 0) {
+    return {
+      code: "INVALID_AMOUNT",
+      message: "💰 Withdrawal amount must be positive"
+    };
+  }
+
+  // Validate currency matches account currency
+  if (withdrawal.currency !== account.currency) {
+    return {
+      code: "INVALID_AMOUNT",
+      message: "💱 Currency mismatch"
+    };
+  }
+
+  // Check sufficient funds
+  if (withdrawal.amount > account.balance) {
+    return {
+      code: "INSUFFICIENT_FUNDS",
+      message: "🚫 Insufficient funds"
+    };
+  }
+
+  // Process successful withdrawal
+  const newBalance = account.balance - withdrawal.amount;
+  const transactionId = generateTransactionId();
+
+  return {
+    success: true,
+    transaction: {
+      id: transactionId,
+      amount: withdrawal.amount,
+      currency: withdrawal.currency,
+      timestamp: withdrawal.timestamp,
+      remainingBalance: newBalance
+    }
+  };
 }
